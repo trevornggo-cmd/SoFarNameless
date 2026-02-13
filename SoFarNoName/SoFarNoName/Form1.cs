@@ -15,7 +15,19 @@ namespace SoFarNoName
         public Form1()
         {
             InitializeComponent();
-            this.Text = "my first winform app";
+            this.Text = "WinForm Course Session 1";
+
+            Button button1 = new Button();
+            button1.Text = "Button1";
+            button1.Top = 10;
+            Button button2 = new Button();
+            button2.Text = "Button2";
+            button2.Top = 70;
+
+            this.Controls.Add(button2);
+            this.Controls.Add(button1);
+
+
 
         }
     }
