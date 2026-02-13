@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,17 +18,30 @@ namespace SoFarNoName
             InitializeComponent();
             this.Text = "WinForm Course Session 1";
 
-            Button button1 = new Button();
-            button1.Text = "Button1";
-            button1.Top = 10;
-            Button button2 = new Button();
-            button2.Text = "Button2";
-            button2.Top = 70;
+           
+        }
 
-            this.Controls.Add(button2);
-            this.Controls.Add(button1);
+        private void Button_Click(object sender, EventArgs e)
+        {
+            Button bta = (Button)sender;
+            if(bta.Text == "button1")
+            {
+                label1.BackColor = Color.Blue;
+            }
+            else if(bta.Text == "button2")
+            {
+                label1.BackColor = Color.Green;
+            }
 
+        }
 
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
 
         }
     }
