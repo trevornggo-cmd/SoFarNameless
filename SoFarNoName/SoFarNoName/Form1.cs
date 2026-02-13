@@ -15,6 +15,8 @@ namespace SoFarNoName
         public Form1()
         {
             InitializeComponent();
+            this.Text = "my first winform app";
+
         }
     }
 }
