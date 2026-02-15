@@ -13,36 +13,38 @@ namespace SoFarNoName
 {
     public partial class Form1 : Form
     {
+        public int count = 0;
         public Form1()
         {
             InitializeComponent();
             this.Text = "WinForm Course Session 1";
-
-           
         }
 
-        private void Button_Click(object sender, EventArgs e)
+        private void ButtonClicked(object sender, EventArgs e)
         {
-            Button bta = (Button)sender;
-            if(bta.Text == "button1")
+            Button btn = (Button)sender;
+
+            if (btn.Name.ToLower().Contains("increment"))
             {
-                label1.BackColor = Color.Blue;
+                count++;
+                DisplayLbl.Text = $"{count}";
             }
-            else if(bta.Text == "button2")
+            else if (btn.Name.ToLower().Contains("decrement"))
             {
-                label1.BackColor = Color.Green;
+                count--;
+                DisplayLbl.Text = $"{count}";
             }
-
+            else if (btn.Name.ToLower().Contains("set"))
+            {
+                int setValue;
+                bool Parsable = int.TryParse(TxtValue.Text, out setValue);
+                if (Parsable) { count = setValue; } else { TxtValue.Text = "Please enter a number"; }
+                DisplayLbl.Text = $"{count}";
+            }
         }
-
-        private void label1_Click(object sender, EventArgs e)
+        private void TxtValue_Clicked(object sender, EventArgs e)
         {
-
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
+            TxtValue.Text = "";
         }
     }
 }
