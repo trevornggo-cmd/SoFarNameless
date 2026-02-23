@@ -24,7 +24,29 @@ namespace SoFarNoName
         }
         private int PlayerSpeed = 10;
         private bool up, down, left, right;
+        private int playerHealth = 5;
+        Enemy firstEnemy;
+        private void StartGame()
+        {
+            firstEnemy = new Enemy(10,5,1,200,200,this);
 
+  
+        }
+        private void StartButton(object sender, EventArgs e)
+        {
+            StartBtn.Enabled = false;
+            StartBtn.Visible = false;
+            StartGame();
+            EnemyMovements.Start();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+           
+            
+            firstEnemy.getCloser(ref playerHealth, PlayerLbl.Left, PlayerLbl.Top);
+            
+        }
 
         private void Game_Interval(object sender, EventArgs e)
         {
