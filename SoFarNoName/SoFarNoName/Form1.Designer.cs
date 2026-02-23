@@ -63,7 +63,6 @@ namespace SoFarNoName
 
         }
 
-
         #endregion
 
         private Label PlayerLbl;

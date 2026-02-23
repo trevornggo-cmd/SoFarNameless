@@ -22,19 +22,19 @@ namespace SoFarNoName
             this.Text = "little surviver";
             this.KeyPreview = true;
             CheckState.Start();
-        }
+                }
 
         private void PlayerLbl_Click(object sender, EventArgs e)
         {
 
         }
-      
+
         private bool up, down, left, right;
         private void Game_Interval(object sender, EventArgs e)
         {
             int VerticalMovement = 0;
             int HorizontalMovement = 0;
-            
+                
             if (up) VerticalMovement--;
             if (down) VerticalMovement++;
             if (left) HorizontalMovement--;
@@ -54,7 +54,7 @@ namespace SoFarNoName
         }
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
-        {
+            {
             if (e.KeyCode == Keys.W) up = false;
             if (e.KeyCode == Keys.S) down = false;
             if (e.KeyCode == Keys.A) left = false;
