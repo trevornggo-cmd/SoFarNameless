@@ -10,10 +10,11 @@ namespace SoFarNoName
     internal class Enemy
     {
         Form1 form;
-        private int HP, SPD, DMA;
+        private int HP, SPD;
+        public int DMA;
         public int Xcoords, Ycoords;
         public bool AliveStill = true;
-        Label copyOfEnemy = new Label();
+        public Label copyOfEnemy = new Label();
         public Enemy(int health, int speed, int damage, int xAxis, int yAxis ,Form1 WhichFormToSpawn)
         {
             HP = health;
@@ -32,21 +33,15 @@ namespace SoFarNoName
             form.Controls.Add(copyOfEnemy);
         }
 
-        public void getCloser(ref int playerHealth, int playerXcoord, int playerYcoord)
+        public void getCloser( int playerXcoord, int playerYcoord)
         {
-            if (playerXcoord > Xcoords) Xcoords += SPD;
-            if (playerXcoord < Xcoords) Xcoords -= SPD;
-            if (playerYcoord > Ycoords) Ycoords += SPD;
-            if (playerYcoord < Ycoords) Ycoords -= SPD;
+            if (playerXcoord >= Xcoords) Xcoords += SPD;
+            if (playerXcoord <= Xcoords) Xcoords -= SPD;
+            if (playerYcoord >= Ycoords) Ycoords += SPD;
+            if (playerYcoord <= Ycoords) Ycoords -= SPD;
 
             copyOfEnemy.Top = Ycoords;
             copyOfEnemy.Left = Xcoords;
-
-
-            if(playerYcoord == Ycoords && playerXcoord == Xcoords)
-            {
-                playerHealth -= DMA;
-            }
            
         }
         public void ReciveDamage(int damageRecived)

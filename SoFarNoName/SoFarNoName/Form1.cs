@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,21 +13,22 @@ namespace SoFarNoName
 {
     public partial class Form1 : Form
     {
-
+        Enemy firstEnemy;
+        Player ThePlayer;
         public Form1()
         {
             InitializeComponent();
             this.Text = "Little Surviver";
             this.KeyPreview = true;
             CheckState.Start();
+            ThePlayer = new Player(10, 5, this);
         }
-        private int PlayerSpeed = 10;
-        private bool up, down, left, right;
-        private int playerHealth = 5;
-        Enemy firstEnemy;
+       
+        
+
         private void StartGame()
         {
-            firstEnemy = new Enemy(10,5,1,200,200,this);
+            firstEnemy = new Enemy(10,2,1,200,200,this);
 
   
         }
@@ -37,39 +37,36 @@ namespace SoFarNoName
             StartBtn.Enabled = false;
             StartBtn.Visible = false;
             StartGame();
-            EnemyMovements.Start();
+            
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-           
-            
-            firstEnemy.getCloser(ref playerHealth, PlayerLbl.Left, PlayerLbl.Top);
-            
-        }
+
 
         private void Game_Interval(object sender, EventArgs e)
         {
-            int VerticalMovement = 0;
-            int HorizontalMovement = 0;
+            ThePlayer.PlayerMoving();
 
-            if (up) VerticalMovement--;
-            if (down) VerticalMovement++;
-            if (left) HorizontalMovement--;
-            if (right) HorizontalMovement++;
+            if (firstEnemy != null)
+            {
+                firstEnemy.getCloser(ThePlayer.PlayerAvatar.Left, ThePlayer.PlayerAvatar.Top);
 
-            PlayerLbl.Top += VerticalMovement * PlayerSpeed;
-            PlayerLbl.Left += HorizontalMovement * PlayerSpeed;
+
+                if (ThePlayer.PlayerAvatar.Bounds.IntersectsWith(firstEnemy.copyOfEnemy.Bounds))
+                {
+                    ThePlayer.ReciveDamage(firstEnemy.DMA);
+                }
+            }
+
         }
 
 
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.W) up = true;
-            if (e.KeyCode == Keys.S) down = true;
-            if (e.KeyCode == Keys.A) left = true;
-            if (e.KeyCode == Keys.D) right = true;
+            if (e.KeyCode == Keys.W) ThePlayer.MovingDirection(0,true);
+            if (e.KeyCode == Keys.S) ThePlayer.MovingDirection(1, true);
+            if (e.KeyCode == Keys.A) ThePlayer.MovingDirection(2, true);
+            if (e.KeyCode == Keys.D) ThePlayer.MovingDirection(3, true);
         }
        
 
@@ -77,10 +74,10 @@ namespace SoFarNoName
 
         private void Form1_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.W) up = false;
-            if (e.KeyCode == Keys.S) down = false;
-            if (e.KeyCode == Keys.A) left = false;
-            if (e.KeyCode == Keys.D) right = false;
+            if (e.KeyCode == Keys.W) ThePlayer.MovingDirection(0, false);
+            if (e.KeyCode == Keys.S) ThePlayer.MovingDirection(1, false);
+            if (e.KeyCode == Keys.A) ThePlayer.MovingDirection(2, false);
+            if (e.KeyCode == Keys.D) ThePlayer.MovingDirection(3, false);
         }
     }
 
