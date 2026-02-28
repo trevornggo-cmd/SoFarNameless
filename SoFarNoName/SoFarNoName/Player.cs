@@ -16,12 +16,10 @@ namespace SoFarNoName
 
         private bool up, down, left, right;
         public Label PlayerAvatar = new Label();
-        public Label PlayerHealthBar = new Label();
-        public Label PlayerRemaingingHealthBar = new Label();
-        private Form form;
+        private CustomHealthLabel<Player> thePlayerHealthBar; 
         public Player(int Speed,int Health,Form TheFormPlayerIsOn)
         {
-            form = TheFormPlayerIsOn;
+            
             playerSpeed = Speed;
             playerMaxHealth = Health;
             playerCurrentHealth = Health;
@@ -33,18 +31,14 @@ namespace SoFarNoName
             PlayerAvatar.Text = "Player";
             PlayerAvatar.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             PlayerAvatar.Size = new System.Drawing.Size(80, 25);
-            PlayerAvatar.Location = new System.Drawing.Point(form.Width/2 - 40, form.Height/2 - 13);
+            PlayerAvatar.Location = new System.Drawing.Point(TheFormPlayerIsOn.Width/2 - 40, TheFormPlayerIsOn.Height/2 - 13);
             PlayerAvatar.BackColor = Color.LightCoral;
 
-            PlayerHealthBar.Text = $"{playerCurrentHealth}/{playerMaxHealth}";
-            PlayerHealthBar.Size = new System.Drawing.Size(80, 25);
-            PlayerHealthBar.BackColor = Color.Gray;
-            PlayerHealthBar.Location = new System.Drawing.Point(form.Width / 2 - 40, form.Height / 2 - 40);
+            thePlayerHealthBar = new CustomHealthLabel<Player>(playerCurrentHealth,playerMaxHealth,this,PlayerAvatar);
 
-
-            form.Controls.Add(PlayerAvatar);
-            form.Controls.Add(PlayerHealthBar);
-            form.Controls.Add(PlayerRemaingingHealthBar);
+            thePlayerHealthBar.AddTheLabel(TheFormPlayerIsOn);
+            TheFormPlayerIsOn.Controls.Add(PlayerAvatar);
+           
         }
   
         public void PlayerMoving()
@@ -59,8 +53,9 @@ namespace SoFarNoName
 
             PlayerAvatar.Top += VerticalMovement * playerSpeed;
             PlayerAvatar.Left += HorizontalMovement * playerSpeed;
-            PlayerHealthBar.Top += VerticalMovement * playerSpeed;
-            PlayerHealthBar.Left += HorizontalMovement * playerSpeed;
+            thePlayerHealthBar.Moving(playerSpeed);
+
+
         }
 
         /// <summary>
@@ -102,9 +97,13 @@ namespace SoFarNoName
         public void ReciveDamage(int DamageRecived)
         {
             playerCurrentHealth -= DamageRecived;
-            PlayerHealthBar.Text = $"{playerCurrentHealth}/{playerMaxHealth}";
+            thePlayerHealthBar.ShowRecivingDMA(DamageRecived);
 
         }
 
+        public void PlayerAttacking()
+        {
+
+        }
     }
 }

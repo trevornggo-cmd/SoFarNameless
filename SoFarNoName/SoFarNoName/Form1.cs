@@ -15,6 +15,7 @@ namespace SoFarNoName
     {
         Enemy firstEnemy;
         Player ThePlayer;
+        List<bullet> allBuletsOnScreen = new List<bullet>();
         public Form1()
         {
             InitializeComponent();
@@ -22,13 +23,14 @@ namespace SoFarNoName
             this.KeyPreview = true;
             CheckState.Start();
             ThePlayer = new Player(10, 5, this);
+            DoubleBuffered = true;
         }
        
         
 
         private void StartGame()
         {
-            firstEnemy = new Enemy(10,2,1,200,200,this);
+            firstEnemy = new Enemy(10,2,1,200,200,this,60);
 
   
         }
@@ -46,6 +48,7 @@ namespace SoFarNoName
         {
             ThePlayer.PlayerMoving();
 
+
             if (firstEnemy != null)
             {
                 firstEnemy.getCloser(ThePlayer.PlayerAvatar.Left, ThePlayer.PlayerAvatar.Top);
@@ -53,10 +56,27 @@ namespace SoFarNoName
 
                 if (ThePlayer.PlayerAvatar.Bounds.IntersectsWith(firstEnemy.copyOfEnemy.Bounds))
                 {
-                    ThePlayer.ReciveDamage(firstEnemy.DMA);
+                    if (firstEnemy.TryAttack())
+                    {
+                        ThePlayer.ReciveDamage(firstEnemy.DMA);
+                    }
                 }
             }
+            
+            for(int i = allBuletsOnScreen.Count - 1; i >= 0; i--)
+            {
+                if (allBuletsOnScreen[i].Bounds.IntersectsWith(firstEnemy.copyOfEnemy.Bounds))
+                {
+                    if (allBuletsOnScreen[i].TryDoingDamage()) { firstEnemy.ReciveDamage(1); }
+                    
+                }
+                if (!allBuletsOnScreen[i].Traveling())
+                {
+                    allBuletsOnScreen.RemoveAt(i);
+                }
 
+            }
+            this.Invalidate();
         }
 
 
@@ -79,6 +99,24 @@ namespace SoFarNoName
             if (e.KeyCode == Keys.A) ThePlayer.MovingDirection(2, false);
             if (e.KeyCode == Keys.D) ThePlayer.MovingDirection(3, false);
         }
+
+        private void Form1_MouseDown(object sender, MouseEventArgs e)
+        {
+            bullet aBullet = new bullet(ThePlayer.PlayerAvatar.Left, ThePlayer.PlayerAvatar.Top, e.X, e.Y,this, 900,10);
+            allBuletsOnScreen.Add(aBullet);
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+            foreach(bullet b in allBuletsOnScreen)
+            {
+                b.redrawing(e.Graphics);
+            }
+        }
+
+
+
     }
 
       
