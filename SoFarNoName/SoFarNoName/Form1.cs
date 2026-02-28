@@ -13,9 +13,10 @@ namespace SoFarNoName
 {
     public partial class Form1 : Form
     {
-        Enemy firstEnemy;
+        List<Enemy> AllEnemies = new List<Enemy>();
         Player ThePlayer;
         List<bullet> allBuletsOnScreen = new List<bullet>();
+        int CurrentLevel = 0;
         public Form1()
         {
             InitializeComponent();
@@ -24,71 +25,107 @@ namespace SoFarNoName
             CheckState.Start();
             ThePlayer = new Player(10, 5, this);
             DoubleBuffered = true;
+
         }
-       
-        
+
+
 
         private void StartGame()
         {
-            firstEnemy = new Enemy(10,2,1,200,200,this,60);
+            Random ran = new Random();
 
-  
+            int numOfEnemies = ran.Next(1, CurrentLevel + 2);
+
+            for (int i = 0; i < CurrentLevel + 2; i++)
+            {
+                int x = ran.Next(0, this.ClientSize.Width - 50);
+                int y = ran.Next(0, this.ClientSize.Height - 50);
+
+                AllEnemies.Add(new Enemy(5 + CurrentLevel, 2, 1 + CurrentLevel, x, y, this, 60));
+
+            }
+            CurrentLevel++;
+
         }
         private void StartButton(object sender, EventArgs e)
         {
             StartBtn.Enabled = false;
             StartBtn.Visible = false;
             StartGame();
-            
+
         }
 
 
 
         private void Game_Interval(object sender, EventArgs e)
         {
+            CurrentAtkLbl.Text = $"Attack : {ThePlayer.peekStat("attack").ToString()}";
+            CurrentSpdLbl.Text = $"Speed : {ThePlayer.peekStat("speed").ToString()}";
+            CurrentLvLbl.Text = $"Current Level : {this.CurrentLevel}";
+
+
             ThePlayer.PlayerMoving();
-
-
-            if (firstEnemy != null)
+            if(AllEnemies.Count <= 0 && !StartBtn.Enabled)
             {
-                firstEnemy.getCloser(ThePlayer.PlayerAvatar.Left, ThePlayer.PlayerAvatar.Top);
-
-
-                if (ThePlayer.PlayerAvatar.Bounds.IntersectsWith(firstEnemy.copyOfEnemy.Bounds))
+                StartBtn.Enabled = true;
+                StartBtn.Visible = true;
+            }
+            for (int i = AllEnemies.Count - 1; i >= 0; i--)
+            {
+                AllEnemies[i].getCloser(ThePlayer.PlayerAvatar.Left, ThePlayer.PlayerAvatar.Top);
+                if (AllEnemies[i].copyOfEnemy.Bounds.IntersectsWith(ThePlayer.PlayerAvatar.Bounds))
                 {
-                    if (firstEnemy.TryAttack())
+                    if (AllEnemies[i].AliveStill && AllEnemies[i].TryAttack())
                     {
-                        ThePlayer.ReciveDamage(firstEnemy.DMA);
+                        ThePlayer.ReciveDamage(AllEnemies[i].DMA);
+                    }
+                    else if (!AllEnemies[i].AliveStill)
+                    {
+                        string upgrade = AllEnemies[i].showListOfEdibleParts();
+                        if (upgrade != null)
+                        {
+                            ThePlayer.PlayerUpgrade(upgrade);
+                            AllEnemies[i].EnemyGone();
+                            AllEnemies.RemoveAt(i);
+                            continue;
+                        }
                     }
                 }
             }
-            
-            for(int i = allBuletsOnScreen.Count - 1; i >= 0; i--)
+            for (int i = allBuletsOnScreen.Count - 1; i >= 0; i--)
             {
-                if (allBuletsOnScreen[i].Bounds.IntersectsWith(firstEnemy.copyOfEnemy.Bounds))
+           
+                if (AllEnemies.Count > 0)
                 {
-                    if (allBuletsOnScreen[i].TryDoingDamage()) { firstEnemy.ReciveDamage(1); }
-                    
+                    for (int j = AllEnemies.Count - 1; j >= 0; j--)
+                    {
+                        if (allBuletsOnScreen[i].Bounds.IntersectsWith(AllEnemies[j].copyOfEnemy.Bounds) && allBuletsOnScreen[i].TryDoingDamage())
+                        {
+                            AllEnemies[j].ReciveDamage(ThePlayer.peekStat("attack"));
+                        }
+
+                    }
                 }
                 if (!allBuletsOnScreen[i].Traveling())
                 {
                     allBuletsOnScreen.RemoveAt(i);
                 }
-
             }
+            
             this.Invalidate();
+
         }
 
 
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.W) ThePlayer.MovingDirection(0,true);
+            if (e.KeyCode == Keys.W) ThePlayer.MovingDirection(0, true);
             if (e.KeyCode == Keys.S) ThePlayer.MovingDirection(1, true);
             if (e.KeyCode == Keys.A) ThePlayer.MovingDirection(2, true);
             if (e.KeyCode == Keys.D) ThePlayer.MovingDirection(3, true);
         }
-       
+
 
 
 
@@ -102,22 +139,29 @@ namespace SoFarNoName
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
-            bullet aBullet = new bullet(ThePlayer.PlayerAvatar.Left, ThePlayer.PlayerAvatar.Top, e.X, e.Y,this, 900,10);
+            bullet aBullet = new bullet(ThePlayer.PlayerAvatar.Left, ThePlayer.PlayerAvatar.Top, e.X, e.Y, this, 900, 10);
             allBuletsOnScreen.Add(aBullet);
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-            foreach(bullet b in allBuletsOnScreen)
+            foreach (bullet b in allBuletsOnScreen)
             {
                 b.redrawing(e.Graphics);
             }
         }
 
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
 
+        }
 
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
-      
+
 }

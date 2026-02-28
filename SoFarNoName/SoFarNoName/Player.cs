@@ -13,6 +13,8 @@ namespace SoFarNoName
         private int playerSpeed;
         public int playerMaxHealth;
         public int playerCurrentHealth;
+        private int playerATK = 1;
+        private Form form;
 
         private bool up, down, left, right;
         public Label PlayerAvatar = new Label();
@@ -34,8 +36,8 @@ namespace SoFarNoName
             PlayerAvatar.Location = new System.Drawing.Point(TheFormPlayerIsOn.Width/2 - 40, TheFormPlayerIsOn.Height/2 - 13);
             PlayerAvatar.BackColor = Color.LightCoral;
 
-            thePlayerHealthBar = new CustomHealthLabel<Player>(playerCurrentHealth,playerMaxHealth,this,PlayerAvatar);
-
+            thePlayerHealthBar = new CustomHealthLabel<Player>(playerMaxHealth,this,PlayerAvatar);
+            form = TheFormPlayerIsOn;
             thePlayerHealthBar.AddTheLabel(TheFormPlayerIsOn);
             TheFormPlayerIsOn.Controls.Add(PlayerAvatar);
            
@@ -57,6 +59,28 @@ namespace SoFarNoName
 
 
         }
+
+        public void PlayerUpgrade(string upgradeOption)
+        {
+            if (upgradeOption.ToLower() == "leg")
+            {
+                playerSpeed++;
+            }
+            else if (upgradeOption.ToLower() == "head")
+            {
+                playerATK++;
+            }
+            else if (upgradeOption.ToLower() == "arm")
+            {
+                if (playerCurrentHealth < playerMaxHealth)
+                {
+                    playerCurrentHealth++;
+                }
+                    thePlayerHealthBar.ShowRecivingDMA(playerCurrentHealth);
+                
+            }
+        }
+        
 
         /// <summary>
         /// Enter a number these can be either 0,1,2 or 3 each representing up, down, left and right respectivly
@@ -97,13 +121,30 @@ namespace SoFarNoName
         public void ReciveDamage(int DamageRecived)
         {
             playerCurrentHealth -= DamageRecived;
-            thePlayerHealthBar.ShowRecivingDMA(DamageRecived);
+            thePlayerHealthBar.ShowRecivingDMA(playerCurrentHealth);
 
         }
 
-        public void PlayerAttacking()
+        public int peekStat(string statToPeek)
         {
-
+            if(statToPeek.ToLower() == "speed")
+            {
+                return playerSpeed; 
+            }
+            else if(statToPeek.ToLower() == "maxhealth")
+            {
+                return playerMaxHealth;
+            }
+            else if(statToPeek.ToLower() == "currenthealth")
+            {
+                return playerCurrentHealth;
+            }
+            else if(statToPeek.ToLower() == "attack")
+            {
+                return playerATK;
+            }
+            return 0;
         }
+
     }
 }

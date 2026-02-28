@@ -16,13 +16,19 @@ namespace SoFarNoName
         private Label HealthNumeric = new Label();
         private T Entity;
         private int EntityMaxHealth;
-        private int remainingHealth;
+        public int remainingHealth;
         private int RemainingHealthBarOriginalWidth;
         private Label body;
 
 
-        public CustomHealthLabel(int EntityCurrentHealth,int EntityMaxHealth,T entity,Label entityBody)
+        public CustomHealthLabel(int EntityMaxHealth,T entity,Label entityBody)
         {
+            
+            body = entityBody;
+            this.EntityMaxHealth = EntityMaxHealth;
+            remainingHealth = EntityMaxHealth;
+            this.Entity = entity;
+
             EntityHealthBar.Text = "";
             EntityHealthBar.Size = new System.Drawing.Size(80, 25);
             EntityHealthBar.BackColor = Color.Gray;
@@ -32,18 +38,15 @@ namespace SoFarNoName
             EntityRemainingHealthBar.Size = new System.Drawing.Size(80, 25);
             EntityRemainingHealthBar.BackColor = Color.Red;
             EntityRemainingHealthBar.Location = new System.Drawing.Point(entityBody.Left, entityBody.Top - 30);
+            RemainingHealthBarOriginalWidth = EntityRemainingHealthBar.Width;
 
-            HealthNumeric.Text = $"{EntityCurrentHealth}/{EntityMaxHealth}";
+            HealthNumeric.Text = $"{remainingHealth}/{EntityMaxHealth}";
             HealthNumeric.Size = new System.Drawing.Size(80, 25);
             HealthNumeric.Location = new System.Drawing.Point(entityBody.Left, entityBody.Top - 60);
             HealthNumeric.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             HealthNumeric.BackColor = Color.Transparent;
 
-            RemainingHealthBarOriginalWidth = EntityRemainingHealthBar.Width;
-            body = entityBody;
-            this.EntityMaxHealth = EntityMaxHealth;
-            remainingHealth = EntityCurrentHealth;
-            this.Entity = entity;
+          
         }
         public void AddTheLabel(Form formToPresent)
         {
@@ -94,15 +97,21 @@ namespace SoFarNoName
 
             
         }
-        public void ShowRecivingDMA(int damageRecived)
+        public void ShowRecivingDMA(int remainingHealth)
         {
             int fractionOfTheWidth;
             fractionOfTheWidth = (int)(RemainingHealthBarOriginalWidth / EntityMaxHealth);
-            remainingHealth -= damageRecived;
+            this.remainingHealth = remainingHealth;
             EntityRemainingHealthBar.Size = new System.Drawing.Size(fractionOfTheWidth * remainingHealth, 25);
            
             HealthNumeric.Text = $"{remainingHealth}/{EntityMaxHealth}" ;
         }
 
+        public void HealthBarDispose()
+        {
+            EntityHealthBar.Dispose();
+            EntityRemainingHealthBar.Dispose();
+            HealthNumeric.Dispose();
+        }
     }
 }
