@@ -15,8 +15,8 @@ namespace SoFarNoName
         private Label EntityRemainingHealthBar = new Label();
         private Label HealthNumeric = new Label();
         private T Entity;
-        private int EntityMaxHealth;
-        public int remainingHealth;
+        private float EntityMaxHealth;
+        public float remainingHealth;
         private int RemainingHealthBarOriginalWidth;
         private Label body;
 
@@ -97,14 +97,18 @@ namespace SoFarNoName
 
             
         }
-        public void ShowRecivingDMA(int remainingHealth)
+        public void ShowCurrentHPStatus(int remainingHealth,int maxHealth)
         {
-            int fractionOfTheWidth;
-            fractionOfTheWidth = (int)(RemainingHealthBarOriginalWidth / EntityMaxHealth);
+            
             this.remainingHealth = remainingHealth;
-            EntityRemainingHealthBar.Size = new System.Drawing.Size(fractionOfTheWidth * remainingHealth, 25);
+            EntityMaxHealth = maxHealth;
+            
+            float percentage = this.remainingHealth / EntityMaxHealth;
+            int widthOfBar = (int)(RemainingHealthBarOriginalWidth * percentage);
+            
+            EntityRemainingHealthBar.Size = new System.Drawing.Size(widthOfBar, 25);
            
-            HealthNumeric.Text = $"{remainingHealth}/{EntityMaxHealth}" ;
+            HealthNumeric.Text = $"{this.remainingHealth}/{EntityMaxHealth}" ;
         }
 
         public void HealthBarDispose()

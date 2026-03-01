@@ -18,10 +18,10 @@ namespace SoFarNoName
 
         private bool up, down, left, right;
         public Label PlayerAvatar = new Label();
-        private CustomHealthLabel<Player> thePlayerHealthBar; 
-        public Player(int Speed,int Health,Form TheFormPlayerIsOn)
+        private CustomHealthLabel<Player> thePlayerHealthBar;
+        public Player(int Speed, int Health, Form TheFormPlayerIsOn)
         {
-            
+
             playerSpeed = Speed;
             playerMaxHealth = Health;
             playerCurrentHealth = Health;
@@ -33,18 +33,18 @@ namespace SoFarNoName
             PlayerAvatar.Text = "Player";
             PlayerAvatar.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             PlayerAvatar.Size = new System.Drawing.Size(80, 25);
-            PlayerAvatar.Location = new System.Drawing.Point(TheFormPlayerIsOn.Width/2 - 40, TheFormPlayerIsOn.Height/2 - 13);
+            PlayerAvatar.Location = new System.Drawing.Point(TheFormPlayerIsOn.Width / 2 - 40, TheFormPlayerIsOn.Height / 2 - 13);
             PlayerAvatar.BackColor = Color.LightCoral;
 
-            thePlayerHealthBar = new CustomHealthLabel<Player>(playerMaxHealth,this,PlayerAvatar);
+            thePlayerHealthBar = new CustomHealthLabel<Player>(playerMaxHealth, this, PlayerAvatar);
             form = TheFormPlayerIsOn;
             thePlayerHealthBar.AddTheLabel(TheFormPlayerIsOn);
             TheFormPlayerIsOn.Controls.Add(PlayerAvatar);
-           
+
         }
-  
+
         public void PlayerMoving()
-        { 
+        {
             int VerticalMovement = 0;
             int HorizontalMovement = 0;
 
@@ -60,27 +60,36 @@ namespace SoFarNoName
 
         }
 
-        public void PlayerUpgrade(string upgradeOption)
+        public void PlayerUpgrade(string upgradeOption, int upByHowMuch)
         {
             if (upgradeOption.ToLower() == "leg")
             {
-                playerSpeed++;
+                playerSpeed += upByHowMuch;
             }
             else if (upgradeOption.ToLower() == "head")
             {
-                playerATK++;
+                playerATK += upByHowMuch;
             }
             else if (upgradeOption.ToLower() == "arm")
             {
-                if (playerCurrentHealth < playerMaxHealth)
+                if (playerCurrentHealth + upByHowMuch < playerMaxHealth)
                 {
-                    playerCurrentHealth++;
+                    playerCurrentHealth += upByHowMuch;
                 }
-                    thePlayerHealthBar.ShowRecivingDMA(playerCurrentHealth);
-                
+                else
+                {
+                    playerCurrentHealth = playerMaxHealth;
+                }
+                thePlayerHealthBar.ShowCurrentHPStatus(playerCurrentHealth, playerMaxHealth);
+
+            }
+            else if (upgradeOption.ToLower() == "heart")
+            {
+                playerMaxHealth += upByHowMuch;
+                thePlayerHealthBar.ShowCurrentHPStatus(playerCurrentHealth, playerMaxHealth);
             }
         }
-        
+
 
         /// <summary>
         /// Enter a number these can be either 0,1,2 or 3 each representing up, down, left and right respectivly
@@ -90,7 +99,7 @@ namespace SoFarNoName
         /// If true then is moving if false then is stoping
         /// </summary> 
         /// <param name="MovingOrStoping"></param>
-        public void MovingDirection(int direction,bool MovingOrStoping)
+        public void MovingDirection(int direction, bool MovingOrStoping)
         {
             if (!(direction > 3 || direction < 0))
             {
@@ -121,29 +130,47 @@ namespace SoFarNoName
         public void ReciveDamage(int DamageRecived)
         {
             playerCurrentHealth -= DamageRecived;
-            thePlayerHealthBar.ShowRecivingDMA(playerCurrentHealth);
+            thePlayerHealthBar.ShowCurrentHPStatus(playerCurrentHealth, playerMaxHealth);
 
         }
 
         public int peekStat(string statToPeek)
         {
-            if(statToPeek.ToLower() == "speed")
+            if (statToPeek.ToLower() == "speed")
             {
-                return playerSpeed; 
+                return playerSpeed;
             }
-            else if(statToPeek.ToLower() == "maxhealth")
+            else if (statToPeek.ToLower() == "maxhealth")
             {
                 return playerMaxHealth;
             }
-            else if(statToPeek.ToLower() == "currenthealth")
+            else if (statToPeek.ToLower() == "currenthealth")
             {
                 return playerCurrentHealth;
             }
-            else if(statToPeek.ToLower() == "attack")
+            else if (statToPeek.ToLower() == "attack")
             {
                 return playerATK;
             }
             return 0;
+        }
+
+        public bool checkIfDead()
+        {
+            if (playerCurrentHealth <= 0)
+            {
+                return true;
+            }
+            else return false;
+        }
+
+        public void PlayerStatReset()
+        {
+            playerSpeed = 10;
+            playerATK = 1;
+            playerMaxHealth = 5;
+            playerCurrentHealth = playerMaxHealth;
+
         }
 
     }

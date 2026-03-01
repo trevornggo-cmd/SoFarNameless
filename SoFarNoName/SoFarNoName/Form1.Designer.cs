@@ -34,10 +34,11 @@ namespace SoFarNoName
             this.CheckState = new System.Windows.Forms.Timer(this.components);
             this.StartBtn = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.CurrentLvLbl = new System.Windows.Forms.Label();
-            this.CurrentAtkLbl = new System.Windows.Forms.Label();
-            this.CurrentSpdLbl = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.CurrentSpdLbl = new System.Windows.Forms.Label();
+            this.CurrentAtkLbl = new System.Windows.Forms.Label();
+            this.CurrentLvLbl = new System.Windows.Forms.Label();
+            this.restartBtn = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -70,36 +71,6 @@ namespace SoFarNoName
             this.panel1.TabIndex = 2;
             this.panel1.Paint += new System.Windows.Forms.PaintEventHandler(this.panel1_Paint);
             // 
-            // CurrentLvLbl
-            // 
-            this.CurrentLvLbl.AutoSize = true;
-            this.CurrentLvLbl.BackColor = System.Drawing.SystemColors.Info;
-            this.CurrentLvLbl.Location = new System.Drawing.Point(32, 57);
-            this.CurrentLvLbl.Name = "CurrentLvLbl";
-            this.CurrentLvLbl.Size = new System.Drawing.Size(35, 13);
-            this.CurrentLvLbl.TabIndex = 0;
-            this.CurrentLvLbl.Text = "label1";
-            // 
-            // CurrentAtkLbl
-            // 
-            this.CurrentAtkLbl.AutoSize = true;
-            this.CurrentAtkLbl.BackColor = System.Drawing.SystemColors.Info;
-            this.CurrentAtkLbl.Location = new System.Drawing.Point(32, 112);
-            this.CurrentAtkLbl.Name = "CurrentAtkLbl";
-            this.CurrentAtkLbl.Size = new System.Drawing.Size(35, 13);
-            this.CurrentAtkLbl.TabIndex = 2;
-            this.CurrentAtkLbl.Text = "label1";
-            // 
-            // CurrentSpdLbl
-            // 
-            this.CurrentSpdLbl.AutoSize = true;
-            this.CurrentSpdLbl.BackColor = System.Drawing.SystemColors.Info;
-            this.CurrentSpdLbl.Location = new System.Drawing.Point(32, 86);
-            this.CurrentSpdLbl.Name = "CurrentSpdLbl";
-            this.CurrentSpdLbl.Size = new System.Drawing.Size(35, 13);
-            this.CurrentSpdLbl.TabIndex = 3;
-            this.CurrentSpdLbl.Text = "label1";
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -111,9 +82,51 @@ namespace SoFarNoName
             this.label2.Text = "Stats: ";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
+            // CurrentSpdLbl
+            // 
+            this.CurrentSpdLbl.AutoSize = true;
+            this.CurrentSpdLbl.BackColor = System.Drawing.SystemColors.Info;
+            this.CurrentSpdLbl.Location = new System.Drawing.Point(32, 86);
+            this.CurrentSpdLbl.Name = "CurrentSpdLbl";
+            this.CurrentSpdLbl.Size = new System.Drawing.Size(35, 13);
+            this.CurrentSpdLbl.TabIndex = 3;
+            this.CurrentSpdLbl.Text = "label1";
+            // 
+            // CurrentAtkLbl
+            // 
+            this.CurrentAtkLbl.AutoSize = true;
+            this.CurrentAtkLbl.BackColor = System.Drawing.SystemColors.Info;
+            this.CurrentAtkLbl.Location = new System.Drawing.Point(32, 112);
+            this.CurrentAtkLbl.Name = "CurrentAtkLbl";
+            this.CurrentAtkLbl.Size = new System.Drawing.Size(35, 13);
+            this.CurrentAtkLbl.TabIndex = 2;
+            this.CurrentAtkLbl.Text = "label1";
+            // 
+            // CurrentLvLbl
+            // 
+            this.CurrentLvLbl.AutoSize = true;
+            this.CurrentLvLbl.BackColor = System.Drawing.SystemColors.Info;
+            this.CurrentLvLbl.Location = new System.Drawing.Point(32, 57);
+            this.CurrentLvLbl.Name = "CurrentLvLbl";
+            this.CurrentLvLbl.Size = new System.Drawing.Size(35, 13);
+            this.CurrentLvLbl.TabIndex = 0;
+            this.CurrentLvLbl.Text = "label1";
+            // 
+            // restartBtn
+            // 
+            this.restartBtn.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.restartBtn.Location = new System.Drawing.Point(640, 21);
+            this.restartBtn.Name = "restartBtn";
+            this.restartBtn.Size = new System.Drawing.Size(469, 103);
+            this.restartBtn.TabIndex = 3;
+            this.restartBtn.Text = "You have died congragulations! click if you want to restart";
+            this.restartBtn.UseVisualStyleBackColor = false;
+            this.restartBtn.Click += new System.EventHandler(this.restartBtn_Click);
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(1750, 820);
+            this.Controls.Add(this.restartBtn);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.StartBtn);
             this.Name = "Form1";
@@ -135,6 +148,7 @@ namespace SoFarNoName
         private Label label2;
         private Label CurrentSpdLbl;
         private Label CurrentAtkLbl;
+        private Button restartBtn;
     }
 }
 

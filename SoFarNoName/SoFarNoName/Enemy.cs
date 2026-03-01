@@ -78,7 +78,7 @@ namespace SoFarNoName
                 HP = 0;
                 edibleParts = new ListOfEdibleParts(copyOfEnemy);
             }
-            enemyHealthBar.ShowRecivingDMA(HP);
+            enemyHealthBar.ShowCurrentHPStatus(HP,MaxHP);
 
         }
         public bool TryAttack()

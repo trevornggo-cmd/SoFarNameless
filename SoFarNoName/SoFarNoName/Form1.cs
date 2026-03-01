@@ -17,6 +17,7 @@ namespace SoFarNoName
         Player ThePlayer;
         List<bullet> allBuletsOnScreen = new List<bullet>();
         int CurrentLevel = 0;
+        Random ran = new Random();
         public Form1()
         {
             InitializeComponent();
@@ -25,14 +26,15 @@ namespace SoFarNoName
             CheckState.Start();
             ThePlayer = new Player(10, 5, this);
             DoubleBuffered = true;
-
+            restartBtn.Enabled = false;
+            restartBtn.Visible = false;
         }
 
 
 
         private void StartGame()
         {
-            Random ran = new Random();
+            
 
             int numOfEnemies = ran.Next(1, CurrentLevel + 2);
 
@@ -65,7 +67,7 @@ namespace SoFarNoName
 
 
             ThePlayer.PlayerMoving();
-            if(AllEnemies.Count <= 0 && !StartBtn.Enabled)
+            if(AllEnemies.Count <= 0 && !StartBtn.Enabled && !ThePlayer.checkIfDead())
             {
                 StartBtn.Enabled = true;
                 StartBtn.Visible = true;
@@ -84,7 +86,7 @@ namespace SoFarNoName
                         string upgrade = AllEnemies[i].showListOfEdibleParts();
                         if (upgrade != null)
                         {
-                            ThePlayer.PlayerUpgrade(upgrade);
+                            ThePlayer.PlayerUpgrade(upgrade,ran.Next(1,CurrentLevel + 1));
                             AllEnemies[i].EnemyGone();
                             AllEnemies.RemoveAt(i);
                             continue;
@@ -99,9 +101,12 @@ namespace SoFarNoName
                 {
                     for (int j = AllEnemies.Count - 1; j >= 0; j--)
                     {
-                        if (allBuletsOnScreen[i].Bounds.IntersectsWith(AllEnemies[j].copyOfEnemy.Bounds) && allBuletsOnScreen[i].TryDoingDamage())
+                        if (AllEnemies[j].AliveStill)
                         {
-                            AllEnemies[j].ReciveDamage(ThePlayer.peekStat("attack"));
+                            if (allBuletsOnScreen[i].Bounds.IntersectsWith(AllEnemies[j].copyOfEnemy.Bounds) && allBuletsOnScreen[i].TryDoingDamage())
+                            {
+                                AllEnemies[j].ReciveDamage(ThePlayer.peekStat("attack"));
+                            }
                         }
 
                     }
@@ -111,7 +116,16 @@ namespace SoFarNoName
                     allBuletsOnScreen.RemoveAt(i);
                 }
             }
-            
+            if (ThePlayer.checkIfDead())
+            {
+                restartBtn.Enabled = true;
+                restartBtn.Visible = true;
+                for(int i = AllEnemies.Count - 1; i >= 0; i--)
+                {
+                    AllEnemies[i].EnemyGone();
+                    AllEnemies.RemoveAt(i);
+                }
+            }
             this.Invalidate();
 
         }
@@ -160,6 +174,14 @@ namespace SoFarNoName
         private void label2_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void restartBtn_Click(object sender, EventArgs e)
+        {
+            CurrentLevel = 0;
+            ThePlayer.PlayerStatReset();
+            restartBtn.Enabled = false;
+            restartBtn.Visible = false;
         }
     }
 
